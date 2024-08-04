@@ -354,7 +354,11 @@ class _Game1TimeSlotScreenState extends State<Game1TimeSlotScreen>
                     // ),
 
                     CustomShinyButton(
-                        text: "TICKETS & RESULTS", width: 300.w, height: 50.h),
+                        text: "TICKETS & RESULTS", width: 300.w, height: 50.h, style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),),
                     Positioned(
                       left: 280.w,
                       bottom: 40.h,

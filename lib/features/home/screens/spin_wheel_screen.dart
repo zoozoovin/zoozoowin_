@@ -261,11 +261,11 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
                                   : '${_formatDuration(remaining)}',
                               width: 250.w,
                               // ic: false,
-                              // style: TextStyle(
-                              //   fontSize: 26.w,
-                              //   fontWeight: FontWeight.w800,
-                              //   color: Colors.white,
-                              // ),
+                          style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
                             );
                           },
                         ),

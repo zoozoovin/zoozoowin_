@@ -617,11 +617,11 @@ class _Game1ScreenState extends State<Game1Screen> {
           width: 250.w,
           text: "PLACE BET",
           // ic: true,
-          // style: TextStyle(
-          //   fontSize: 28.w,
-          //   fontWeight: FontWeight.w600,
-          //   color: Colors.white,
-          // ),
+         style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
         ),
       );
 

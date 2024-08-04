@@ -193,15 +193,15 @@ class _WalletScreenState extends State<WalletScreen> {
                             _navigateToAddMoneyScreen(context);
                           },
                           child: CustomShinyButton(
-                            height: 50.h,
-                            text: 'Add Cash',
-                            width: 130.w,
-                            // ic: false,
-                            // style: TextStyle(
-                                // fontSize: 20.w,
-                                // fontWeight: FontWeight.w600,
-                                // color: Colors.white,
-                                // fontStyle: FontStyle.italic),
+                            height: 40.h,
+                            text: 'ADD CASH',
+                            width: 120.w,
+                            ic: true,
+                            style: TextStyle(
+                                fontSize: 18.w,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white,
+                                ),
                           ))
                     ],
                   ),

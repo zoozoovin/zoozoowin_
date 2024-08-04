@@ -4,12 +4,18 @@ class CustomShinyButton extends StatefulWidget {
   final String text;
   final double width;
   final double height;
+  final TextStyle style;
+  final bool ic;
+  
 
-  const CustomShinyButton({
+
+ CustomShinyButton({
     Key? key,
     required this.text,
     required this.width,
     required this.height,
+    required this.style,
+    this.ic=false
   }) : super(key: key);
 
   @override
@@ -24,7 +30,7 @@ class _CustomShinyButtonState extends State<CustomShinyButton> with SingleTicker
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 4),
       vsync: this,
     )..repeat(reverse: false);
 
@@ -48,7 +54,7 @@ class _CustomShinyButtonState extends State<CustomShinyButton> with SingleTicker
             height: widget.height,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xff00ff0a), Color.fromARGB(255, 58, 199, 2)],
+                colors: [Color.fromARGB(255, 2, 167, 7), Color.fromARGB(255, 32, 195, 7)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -57,11 +63,7 @@ class _CustomShinyButtonState extends State<CustomShinyButton> with SingleTicker
             child: Center(
               child: Text(
                 widget.text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: widget.style
               ),
             ),
           ),
@@ -80,9 +82,10 @@ class _CustomShinyButtonState extends State<CustomShinyButton> with SingleTicker
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.white.withOpacity(0),
+                        const Color.fromARGB(0, 2, 167, 8),
+                        // Colors.white.withOpacity(0),
                         Colors.white.withOpacity(0.5),
-                        Colors.white.withOpacity(0),
+                       !widget.ic? Colors.white.withOpacity(0):Colors.white.withOpacity(0.3),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
