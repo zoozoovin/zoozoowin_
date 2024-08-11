@@ -152,6 +152,7 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
       builder: (context, value, child) => LoaderWidget(
         isLoading: value.isLoading,
         child: Scaffold(
+          backgroundColor: Colors.black,
           body: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -260,6 +261,11 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
                                   ? 'EARN BONUS'
                                   : '${_formatDuration(remaining)}',
                               width: 250.w,
+                              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
                               // ic: false,
                               // style: TextStyle(
                               //   fontSize: 26.w,

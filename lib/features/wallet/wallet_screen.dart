@@ -20,6 +20,7 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
         body: SingleChildScrollView(
       child: Consumer<WalletProvider>(
         builder: (context, value, child) => Container(
@@ -27,7 +28,7 @@ class _WalletScreenState extends State<WalletScreen> {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage(AppImages.background), fit: BoxFit.cover)),
+                  image: AssetImage("assets/game2bg.png"), fit: BoxFit.cover)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -197,11 +198,11 @@ class _WalletScreenState extends State<WalletScreen> {
                             text: 'Add Cash',
                             width: 130.w,
                             // ic: false,
-                            // style: TextStyle(
-                                // fontSize: 20.w,
-                                // fontWeight: FontWeight.w600,
-                                // color: Colors.white,
-                                // fontStyle: FontStyle.italic),
+                             style: TextStyle(
+                                fontSize: 18.w,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white     ,
+                                fontStyle: FontStyle.italic                           ),
                           ))
                     ],
                   ),

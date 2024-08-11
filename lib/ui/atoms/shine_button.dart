@@ -1,22 +1,25 @@
-import 'package:zoozoowin_/core/app_imports.dart';
+import 'package:flutter/material.dart';
 
 class CustomShinyButton extends StatefulWidget {
   final String text;
   final double width;
   final double height;
+  final TextStyle style;
 
-  const CustomShinyButton({
-    Key? key,
-    required this.text,
-    required this.width,
-    required this.height,
-  }) : super(key: key);
+  const CustomShinyButton(
+      {Key? key,
+      required this.text,
+      required this.width,
+      required this.height,
+      required this.style})
+      : super(key: key);
 
   @override
   _CustomShinyButtonState createState() => _CustomShinyButtonState();
 }
 
-class _CustomShinyButtonState extends State<CustomShinyButton> with SingleTickerProviderStateMixin {
+class _CustomShinyButtonState extends State<CustomShinyButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -40,29 +43,23 @@ class _CustomShinyButtonState extends State<CustomShinyButton> with SingleTicker
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(9),
       child: Stack(
         children: [
           Container(
             width: widget.width,
             height: widget.height,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xff00ff0a), Color.fromARGB(255, 58, 199, 2)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+              // color: const Color.fromARGB(255, 21, 255, 0),
+              gradient: LinearGradient(
+                colors: [Color(0xFF00FF0A), Color(0xFF008A12)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(9),
             ),
             child: Center(
-              child: Text(
-                widget.text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              child: Text(widget.text, style: widget.style),
             ),
           ),
           Positioned.fill(
@@ -75,17 +72,17 @@ class _CustomShinyButtonState extends State<CustomShinyButton> with SingleTicker
                 );
               },
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(9),
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.white.withOpacity(0),
-                        Colors.white.withOpacity(0.5),
-                        Colors.white.withOpacity(0),
+                        const Color.fromARGB(132, 7, 190, 10).withOpacity(0),
+                        Colors.white.withOpacity(0.7),
+                        const Color.fromARGB(132, 7, 190, 10).withOpacity(0),
                       ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
                   ),
                 ),

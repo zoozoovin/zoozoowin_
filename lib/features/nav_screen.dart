@@ -82,6 +82,7 @@ class _NavBarScreenState extends State<NavBarScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        backgroundColor: Colors.black,
         // backgroundColor: const Color.fromARGB(255, 0, 73, 122),
         // backgroundColor: const Color.fromARGB(255, 0, 107, 173),
 

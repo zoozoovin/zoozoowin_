@@ -64,13 +64,14 @@ class _Game1TimeSlotScreenState extends State<Game1TimeSlotScreen>
       builder: (context, value, child) => LoaderWidget(
         isLoading: value.isLoading,
         child: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 0, 73, 122),
+          // backgroundColor: const Color.fromARGB(255, 0, 73, 122),
+          backgroundColor: Colors.black,
           body: Container(
             decoration: BoxDecoration(
-                // image: DecorationImage(
-                //   image: AssetImage(AppImages.background),
-                //   fit: BoxFit.cover,
-                // ),
+                image: DecorationImage(
+                  image: AssetImage(AppImages.background),
+                  fit: BoxFit.cover,
+                ),
                 ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -143,15 +144,15 @@ class _Game1TimeSlotScreenState extends State<Game1TimeSlotScreen>
                                 'assets/images/greenslot.png') {
                               showModalBottomSheet(
                                 context: context,
-                                backgroundColor:
-                                    const Color.fromARGB(255, 0, 107, 173),
+                                backgroundColor:Colors.black38,
+                                    // const Color.fromARGB(255, 0, 107, 173),
                                 builder: (context) {
                                   return Container(
                                     height: 180.h,
                                     decoration: BoxDecoration(
                                         // image: DecorationImage(
                                         //   image: AssetImage(AppImages.background),
-                                        //   fit: BoxFit.cover,
+                                        //   // fit: BoxFit.cover,
                                         // ),
                                         borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(34),
@@ -354,7 +355,11 @@ class _Game1TimeSlotScreenState extends State<Game1TimeSlotScreen>
                     // ),
 
                     CustomShinyButton(
-                        text: "TICKETS & RESULTS", width: 300.w, height: 50.h),
+                        text: "TICKETS & RESULTS", width: 300.w, height: 50.h , style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),),
                     Positioned(
                       left: 280.w,
                       bottom: 40.h,

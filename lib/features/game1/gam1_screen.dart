@@ -157,17 +157,18 @@ class _Game1ScreenState extends State<Game1Screen> {
     return LoaderWidget(
       isLoading: isLoading,
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 0, 73, 122),
+        // backgroundColor: const Color.fromARGB(255, 0, 73, 122),
+        backgroundColor: Colors.black,
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
-              // image: DecorationImage(
-              // image: AssetImage(
-              //   AppImages.background,
-              // ),
-              // fit: BoxFit.cover,
-              // ),
+              image: DecorationImage(
+              image: AssetImage(
+                AppImages.background,
+              ),
+              fit: BoxFit.cover,
+              ),
               ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -392,37 +393,49 @@ class _Game1ScreenState extends State<Game1Screen> {
                     //   ),
                     // ),
 
-                    child: Center(
-                      child: Container(
-                        height: 45.h,
-                        width: 300.w,
-                        // padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.amber,
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF00FF0A), Color(0xFF008A12)],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Text(
-                                "ADD CASH",
-                                style: TextStyle(
-                                  fontSize: 28.w,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                  // fontStyle: FontStyle.italic
-                                ),
-                              ),
-                            ),
-                            // CustomSpacers.width14,
-                          ],
-                        ),
+                    // child: Center(
+                    //   child: Container(
+                    //     height: 45.h,
+                    //     width: 300.w,
+                    //     // padding: EdgeInsets.all(12),
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.amber,
+                    //       gradient: LinearGradient(
+                    //         colors: [Color(0xFF00FF0A), Color(0xFF008A12)],
+                    //         begin: Alignment.topCenter,
+                    //         end: Alignment.bottomCenter,
+                    //       ),
+                    //       borderRadius: BorderRadius.circular(10),
+                    //     ),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [
+                    //         Center(
+                    //           child: Text(
+                    //             "ADD CASH",
+                    // style: TextStyle(
+                    //   fontSize: 28.w,
+                    //   fontWeight: FontWeight.w600,
+                    //   color: Colors.white,
+                    //   // fontStyle: FontStyle.italic
+                    // ),
+                    //           ),
+                    //         ),
+                    //         // CustomSpacers.width14,
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+
+                    child: CustomShinyButton(
+                      text: "ADD CASH",
+                      width: 300.w,
+                      height: 45.h,
+                      style: TextStyle(
+                        fontSize: 28.w,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        // fontStyle: FontStyle.italic
                       ),
                     ),
                   )),
@@ -617,11 +630,11 @@ class _Game1ScreenState extends State<Game1Screen> {
           width: 250.w,
           text: "PLACE BET",
           // ic: true,
-          // style: TextStyle(
-          //   fontSize: 28.w,
-          //   fontWeight: FontWeight.w600,
-          //   color: Colors.white,
-          // ),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 35.w,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       );
 

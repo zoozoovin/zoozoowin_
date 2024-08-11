@@ -23,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Consumer<WalletProvider>(
         builder: (context, value, child) => Container(
           height: MediaQuery.of(context).size.height,

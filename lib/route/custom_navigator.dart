@@ -6,6 +6,7 @@ import 'package:zoozoowin_/features/home/screens/profile_screen.dart';
 import 'package:zoozoowin_/features/home/screens/ticketsscreen.dart';
 import 'package:zoozoowin_/features/nav_screen.dart';
 import 'package:zoozoowin_/features/onboarding/screens/auth_screen.dart';
+import 'package:zoozoowin_/features/onboarding/screens/phone_auth.dart';
 import 'package:zoozoowin_/features/onboarding/screens/splash_screen.dart';
 
 import '../core/app_imports.dart';

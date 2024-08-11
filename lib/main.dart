@@ -11,6 +11,7 @@ import 'package:zoozoowin_/core/managers/app_manager.dart';
 import 'package:zoozoowin_/core/managers/shared_preference_manager.dart';
 import 'package:zoozoowin_/core/utils/screen_utils.dart';
 import 'package:zoozoowin_/features/game1/game_provider.dart';
+import 'package:zoozoowin_/features/game2/game2_provider.dart';
 import 'package:zoozoowin_/features/home/data/home_provider.dart';
 import 'package:zoozoowin_/features/home/data/profile_provider.dart';
 import 'package:zoozoowin_/features/home/data/result_provider.dart';
@@ -139,6 +140,11 @@ class _MyAppState extends State<MyApp> {
 
         ChangeNotifierProvider(
           create: (_) => GameProvider(),
+        ),
+
+
+        ChangeNotifierProvider(
+          create: (_) => Game2Provider(),
         ),
 
 

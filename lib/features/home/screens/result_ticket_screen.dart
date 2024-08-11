@@ -3,10 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:zoozoowin_/core/constants/app_images.dart';
 import 'package:zoozoowin_/core/utils/custom_spacers.dart';
 import 'package:zoozoowin_/core/utils/screen_utils.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:zoozoowin_/features/home/data/result_ticket_provider.dart';
+import 'package:zoozoowin_/ui/atoms/shine_button.dart';
+import 'package:zoozoowin_/ui/atoms/shine_button1.dart';
 
 class ResultTicketScreen extends StatefulWidget {
   const ResultTicketScreen({super.key});
@@ -58,9 +61,18 @@ class _ResultTicketScreenState extends State<ResultTicketScreen>
     return Consumer<ResultTicketProvider>(
       builder: (context, value, child) => Scaffold(
         backgroundColor: const Color.fromARGB(255, 0, 73, 122),
+        // backgroundColor: Colors.black,
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
+          // decoration: BoxDecoration(
+          //   image: DecorationImage(
+          //     image: AssetImage(
+          //       AppImages.background,
+          //     ),
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -359,81 +371,83 @@ class _ResultTicketScreenState extends State<ResultTicketScreen>
                 onTap: () {
                   _showUserCard(context, cardList, title, cardWon);
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: Container(
-                    height: 60.h,
-                    width: 300.w,
-                    // color: Colors.amber,
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Container(
-                            padding: EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: Colors.amber,
-                              gradient: LinearGradient(
-                                colors: [Color(0xFF00FF0A), Color(0xFF008A12)],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
+                child: count != 0
+                    ? Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: CustomShinyButton1(
+                          text: title,
+                          height: 60.h,
+                          width: 300.w,
+                          count: count,
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Container(
+                          width: 300.w,
+                          height: 60.h,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color(0xff00ff0a),
+                                Color.fromARGB(255, 58, 199, 2)
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                    radius: 25.r,
-                                    backgroundColor: Colors.white,
-                                    child: Image.asset(
-                                      'assets/images/tickets.png',
-                                      height: 30.h,
-                                      width: 30.w,
-                                    )),
-                                CustomSpacers.width16,
-                                Center(
-                                  child: Text(
-                                    title,
-                                    style: TextStyle(
-                                        fontSize: 26.w,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                        fontStyle: FontStyle.italic),
-                                  ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              CustomSpacers.width4,
+                              CircleAvatar(
+                                  radius: 22.r,
+                                  backgroundColor: Colors.white,
+                                  child: Image.asset(
+                                    'assets/images/tickets.png',
+                                    height: 30.h,
+                                    width: 30.w,
+                                  )),
+                              CustomSpacers.width16,
+                              Center(
+                                child: Text(
+                                  title,
+                                  style: TextStyle(
+                                      fontSize: 26.w,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.italic),
                                 ),
-                                CustomSpacers.width20,
-                                count != 0
-                                    ? badges.Badge(
-                                        badgeStyle: badges.BadgeStyle(
-                                            borderSide: BorderSide(
-                                                color: Colors.white, width: 2)),
-                                        badgeContent: Container(
-                                          height: 23.h,
-                                          width: 23.w,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(1.0),
-                                            child: Center(
-                                              child: Text(
-                                                count.toString(),
-                                                // '12',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14.w),
-                                              ),
+                              ),
+                              CustomSpacers.width20,
+                              count != 0
+                                  ? badges.Badge(
+                                      badgeStyle: badges.BadgeStyle(
+                                          borderSide: BorderSide(
+                                              color: Colors.white, width: 2)),
+                                      badgeContent: Container(
+                                        height: 23.h,
+                                        width: 23.w,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: Center(
+                                            child: Text(
+                                              count.toString(),
+                                              // '12',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14.w),
                                             ),
                                           ),
                                         ),
-                                      )
-                                    : Container(),
-                              ],
-                            ),
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ),
             ),
             Container(

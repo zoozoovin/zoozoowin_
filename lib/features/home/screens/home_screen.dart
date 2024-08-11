@@ -6,7 +6,9 @@ import 'package:zoozoowin_/core/app_imports.dart';
 import 'package:zoozoowin_/core/constants/app_data.dart';
 import 'package:zoozoowin_/core/utils/screen_utils.dart';
 import 'package:zoozoowin_/features/game1/game1_timeslotscreen.dart';
+import 'package:zoozoowin_/features/game2/game2_splash.dart';
 import 'package:zoozoowin_/features/home/data/home_provider.dart';
+import 'package:zoozoowin_/features/home/data/result_ticket_provider.dart';
 import 'package:zoozoowin_/features/home/screens/notification_screen.dart';
 import 'package:zoozoowin_/features/home/screens/profile_screen.dart';
 import 'package:zoozoowin_/features/home/screens/spin_wheel_screen.dart';
@@ -32,11 +34,11 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
+   
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await Provider.of<HomeProvider>(context, listen: false)
           .initializeStream();
 
-      await Provider.of<HomeProvider>(context, listen: false).fetchData();
     });
     _controller = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -68,7 +70,10 @@ class _HomeScreenState extends State<HomeScreen>
         _countdownController.add(countdownText);
 
         if (remaining.inMinutes == 0 && remaining.inSeconds == 0) {
-          await _updateData();
+          print('helo');
+          // await _updateData();
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => NavBarScreen(index: 0,)));
         }
       } else {
         countdownText = "";
@@ -85,32 +90,25 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage(AppImages.background), fit: BoxFit.cover),
+              image: AssetImage('assets/game2bg.png'), fit: BoxFit.cover),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CustomSpacers.height24,
-                  _buildTop(),
-                  _buildResult(),
-                  CustomSpacers.height8,
-                  Divider(thickness: 3),
-                  _buildCardGames(),
-                  _buildBoardGames(),
-                ],
-              ),
-            ),
+            CustomSpacers.height24,
+            _buildTop(),
+            _buildResult(),
+            CustomSpacers.height8,
+            Divider(thickness: 3),
+            _buildCardGames(),
+            _buildBoardGames(),
           ],
         ),
       ),
@@ -417,7 +415,196 @@ class _HomeScreenState extends State<HomeScreen>
         },
       );
 
-  // _buildResult() => Consumer<TicketProvider>(
+  _buildCardGames() => Consumer<HomeProvider>(
+        builder: (context, value, child) => Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(right: 12.w, top: 2.h),
+                child: const Text(
+                  'CARD GAMES',
+                  style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                InkWell(
+                  onTap: () {
+                    _navigateToNotification(context, Game1TimeSlotScreen());
+                  },
+                  child: Container(
+                    height: 160.h,
+                    width: 200.w,
+                    // color: Colors.amber,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.asset(
+                          AppImages.game1,
+                          height: 150.h,
+                          // width: 140.w,
+                        ),
+                        Positioned(
+                            left: 150.w,
+                            bottom: 115.h,
+                            child: badges.Badge(
+                              badgeContent: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(
+                                  value.totalCount.toString(),
+                                  // "12",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20.w),
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    // _navigateToNotification(context, Game2SplashScreen());
+
+                    Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const Game2SplashScreen()));
+                  },
+                  child: Image.asset(
+                    AppImages.game2,
+                    height: 150.h,
+                  ),
+                ),
+                CustomSpacers.width14,
+              ],
+            ),
+            CustomSpacers.height18,
+            Divider(
+              thickness: 3,
+            )
+          ],
+        ),
+      );
+
+  void _navigateToNotification(BuildContext context, Widget? a) {
+    Navigator.of(context)
+        .push(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 500),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+            opacity: animation,
+            child: a, // Replace with your notification screen
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
+    )
+        .then((v) async {
+      await Provider.of<HomeProvider>(context, listen: false)
+          .initializeStream();
+      await Provider.of<HomeProvider>(context, listen: false).fetchData();
+
+      setState(() {});
+    });
+  }
+
+  _buildBoardGames() => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: EdgeInsets.only(right: 12.w, top: 2.h),
+              child: const Text(
+                'BOARD GAMES',
+                style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 28.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Image.asset(
+                  AppImages.ludo,
+                  height: 140.h,
+                ),
+                Image.asset(
+                  AppImages.ludo,
+                  height: 130.h,
+                  color: Colors.transparent,
+                ),
+                CustomSpacers.width14,
+              ],
+            ),
+          ),
+        ],
+      );
+
+  bool _showBanner = true;
+  _buildBanner() => Container(
+        width: MediaQuery.of(context).size.width,
+        height: 120.h,
+        decoration: const BoxDecoration(
+          color: Colors.black,
+          image: DecorationImage(
+              image: AssetImage(AppImages.banner), fit: BoxFit.cover),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            SizedBox(
+              height: 10.h,
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _showBanner = false;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  AppIcons.cross,
+                  height: 20.h,
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+}
+
+
+
+
+
+
+
+// _buildResult() => Consumer<TicketProvider>(
   //       builder: (context, value, child) => Column(
   //         children: [
   //           Row(
@@ -682,195 +869,3 @@ class _HomeScreenState extends State<HomeScreen>
   // )
   //       ],
   //     );
-
-  _buildCardGames() => Consumer<HomeProvider>(
-        builder: (context, value, child) => Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(right: 12.w, top: 2.h),
-                child: const Text(
-                  'CARD GAMES',
-                  style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                InkWell(
-                  onTap: () {
-                    _navigateToNotification(context, Game1TimeSlotScreen());
-                  },
-                  child: Container(
-                    height: 160.h,
-                    width: 200.w,
-                    // color: Colors.amber,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.asset(
-                          AppImages.game1,
-                          height: 150.h,
-                          // width: 140.w,
-                        ),
-                        Positioned(
-                            left: 150.w,
-                            bottom: 115.h,
-                            child: badges.Badge(
-                              badgeContent: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text(
-                                  value.totalCount.toString(),
-                                  // "12",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20.w),
-                                ),
-                              ),
-                            )
-
-                            // child: Center(
-                            //     child: Container(
-                            //         height: 40.h,
-                            //         width: 40.w,
-                            //         // color: Colors.amber,
-                            //         child: Center(
-                            //             child: Text(
-                            //           // "12",
-                            //           value.totalCount.toString(),
-
-                            //           style: TextStyle(
-                            //               fontSize: 28.w,
-                            //               color: Colors.yellow,
-                            //               fontWeight: FontWeight.bold ,),
-                            //         )))),
-                            ),
-                      ],
-                    ),
-                  ),
-                ),
-                Image.asset(
-                  AppImages.game2,
-                  height: 150.h,
-                ),
-                CustomSpacers.width14,
-              ],
-            ),
-            CustomSpacers.height18,
-            Divider(
-              thickness: 3,
-            )
-          ],
-        ),
-      );
-
-  void _navigateToNotification(BuildContext context, Widget? a) {
-    Navigator.of(context)
-        .push(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 500),
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: animation,
-            child: a, // Replace with your notification screen
-          );
-        },
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          var offsetAnimation = animation.drive(tween);
-          return SlideTransition(
-            position: offsetAnimation,
-            child: child,
-          );
-        },
-      ),
-    )
-        .then((v) async {
-      await Provider.of<HomeProvider>(context, listen: false)
-          .initializeStream();
-      await Provider.of<HomeProvider>(context, listen: false).fetchData();
-
-      setState(() {});
-    });
-  }
-
-  _buildBoardGames() => Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 12.w, top: 2.h),
-              child: const Text(
-                'BOARD GAMES',
-                style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 28.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Image.asset(
-                  AppImages.ludo,
-                  height: 140.h,
-                ),
-                Image.asset(
-                  AppImages.ludo,
-                  height: 130.h,
-                  color: Colors.transparent,
-                ),
-                CustomSpacers.width14,
-              ],
-            ),
-          ),
-        ],
-      );
-
-  bool _showBanner = true;
-  _buildBanner() => Container(
-        width: MediaQuery.of(context).size.width,
-        height: 120.h,
-        decoration: const BoxDecoration(
-          color: Colors.black,
-          image: DecorationImage(
-              image: AssetImage(AppImages.banner), fit: BoxFit.cover),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            SizedBox(
-              height: 10.h,
-            ),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  _showBanner = false;
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  AppIcons.cross,
-                  height: 20.h,
-                ),
-              ),
-            )
-          ],
-        ),
-      );
-}
