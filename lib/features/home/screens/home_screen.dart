@@ -6,9 +6,8 @@ import 'package:zoozoowin_/core/app_imports.dart';
 import 'package:zoozoowin_/core/constants/app_data.dart';
 import 'package:zoozoowin_/core/utils/screen_utils.dart';
 import 'package:zoozoowin_/features/game1/game1_timeslotscreen.dart';
-import 'package:zoozoowin_/features/game2/game2_splash.dart';
+import 'package:zoozoowin_/features/game2/game2.dart';
 import 'package:zoozoowin_/features/home/data/home_provider.dart';
-import 'package:zoozoowin_/features/home/data/result_ticket_provider.dart';
 import 'package:zoozoowin_/features/home/screens/notification_screen.dart';
 import 'package:zoozoowin_/features/home/screens/profile_screen.dart';
 import 'package:zoozoowin_/features/home/screens/spin_wheel_screen.dart';
@@ -34,11 +33,9 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-   
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await Provider.of<HomeProvider>(context, listen: false)
-          .initializeStream();
 
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await Provider.of<HomeProvider>(context, listen: false).fetchData();
     });
     _controller = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -71,9 +68,13 @@ class _HomeScreenState extends State<HomeScreen>
 
         if (remaining.inMinutes == 0 && remaining.inSeconds == 0) {
           print('helo');
-          // await _updateData();
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => NavBarScreen(index: 0,)));
+          _updateData();
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NavBarScreen(
+                        index: 0,
+                      )));
         }
       } else {
         countdownText = "";
@@ -168,8 +169,8 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   )
                       .then((v) async {
-                    await Provider.of<HomeProvider>(context, listen: false)
-                        .initializeStream();
+                    // await Provider.of<HomeProvider>(context, listen: false)
+                    //     .initializeStream();
                     await Provider.of<HomeProvider>(context, listen: false)
                         .fetchData();
 
@@ -471,10 +472,10 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 InkWell(
                   onTap: () {
-                    // _navigateToNotification(context, Game2SplashScreen());
+                    _navigateToNotification(context, Game2Screen());
 
-                    Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const Game2SplashScreen()));
+                    //           Navigator.push(context,
+                    // MaterialPageRoute(builder: (context) => const Game2Screen()));
                   },
                   child: Image.asset(
                     AppImages.game2,
@@ -518,8 +519,8 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     )
         .then((v) async {
-      await Provider.of<HomeProvider>(context, listen: false)
-          .initializeStream();
+      // await Provider.of<HomeProvider>(context, listen: false)
+      //     .initializeStream();
       await Provider.of<HomeProvider>(context, listen: false).fetchData();
 
       setState(() {});

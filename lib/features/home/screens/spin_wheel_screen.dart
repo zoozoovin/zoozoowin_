@@ -43,7 +43,7 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
     Random random = Random();
     List<int> indices = List.generate(9, (index) => index)..shuffle();
     for (int i = 0; i < 6; i++) {
-      blocks[indices[i]] = random.nextInt(31) + 10; // Points between 10 to 40
+      blocks[indices[i]] = random.nextInt(9) + 6; // Points between 6 to 14
     }
   }
 
@@ -262,10 +262,10 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
                                   : '${_formatDuration(remaining)}',
                               width: 250.w,
                               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                               // ic: false,
                               // style: TextStyle(
                               //   fontSize: 26.w,

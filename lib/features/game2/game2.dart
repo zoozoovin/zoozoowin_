@@ -13,6 +13,8 @@ import 'package:zoozoowin_/features/game2/game2_provider.dart';
 import 'package:zoozoowin_/features/wallet/data/transaction_provider.dart';
 import 'package:zoozoowin_/features/wallet/data/wallet_provider.dart';
 import 'package:zoozoowin_/notification_service.dart';
+import 'package:zoozoowin_/ui/atoms/custom_button_game2.dart';
+import 'package:zoozoowin_/ui/atoms/shine_button2.dart';
 
 class Game2Screen extends StatefulWidget {
   const Game2Screen({super.key});
@@ -35,18 +37,18 @@ class _Game2ScreenState extends State<Game2Screen> {
 
   // Map card IDs to image paths
   final Map<String, String> cardImages = {
-    'c1': "assets/images/k_jack.png",
-    'c2': "assets/images/k_heart.png",
-    'c3': "assets/images/k_club.png",
-    'c4': "assets/images/q_jack.png",
-    'c5': "assets/images/q_heart.png",
-    'c6': "assets/images/q_club.png",
-    'c7': "assets/images/j_jack.png",
-    'c8': "assets/images/j_heart.png",
-    'c9': "assets/images/j_club.png",
-    'c10': "assets/images/k_diamond.png",
-    'c11': "assets/images/q_diamond.png",
-    'c12': "assets/images/j_diamond.png",
+    'c1': "assets/k_jack.png",
+    'c2': "assets/k_heart.png",
+    'c3': "assets/k_club.png",
+    'c4': "assets/k_diamond.png",
+    'c5': "assets/q_jack.png",
+    'c6': "assets/q_heart.png",
+    'c7': "assets/q_club.png",
+    'c8': "assets/q_diamond.png",
+    'c9': "assets/j_jack.png",
+    'c10': "assets/j_heart.png",
+    'c11': "assets/j_club.png",
+    'c12': "assets/j_diamond.png",
   };
 
   @override
@@ -56,6 +58,7 @@ class _Game2ScreenState extends State<Game2Screen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       Provider.of<Game2Provider>(context, listen: false).set();
     });
+    // _showResultDialog();
   }
 
   @override
@@ -112,7 +115,7 @@ class _Game2ScreenState extends State<Game2Screen> {
     final bid = Provider.of<Game2Provider>(context, listen: false);
     if (bid.isWin == "win") {
       PushNotificationService.sendFCMMessage(
-          "Patti king", "HURRAY ! you won rs${bid.wonAmount} in patti king");
+          "Patti king", "HURRAY ! you won ₹ ${bid.wonAmount} in patti king");
     }
 
     showDialog(
@@ -120,69 +123,223 @@ class _Game2ScreenState extends State<Game2Screen> {
       barrierDismissible:
           false, // Prevent closing the dialog by tapping outside
       builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          contentPadding: EdgeInsets.zero,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                ),
-                child: _winningCardId != null
-                    ? Image.asset(
-                        cardImages[_winningCardId!]!,
-                        height: 100,
-                        width: 100,
-                      )
-                    : Container(),
-              ),
-              SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    bid.isWin == "win"
-                        ? 'You Won! Rs${bid.wonAmount}'
-                        : 'You Lost!',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: bid.isWin == "win" ? Colors.green : Colors.red,
-                    ),
+        return Dialog(
+          backgroundColor: Colors.black38, // Set the background color to black
+          insetPadding:
+              EdgeInsets.zero, // Remove default padding around the dialog
+          child: bid.isWin == "win"
+              ? Container(
+                  width: MediaQuery.of(context).size.width, // Full screen width
+                  height:
+                      MediaQuery.of(context).size.height, // Full screen height
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Centered background GIF
+                      Center(
+                        child: Image.asset(
+                          'assets/won.gif',
+                          width: MediaQuery.of(context).size.width *
+                              0.9, // Scale to 90% of screen width
+                          height: MediaQuery.of(context).size.height *
+                              0.9, // Scale to 90% of screen height
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      // Positioned content in the center
+                      Positioned.fill(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CustomSpacers.height18,
+
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                                _resetGame();
+                              },
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Image.asset('assets/cross.png'),
+                                  )),
+                            ),
+                            CustomSpacers.height40,
+                            // Card image
+                            Image.asset(
+                              cardImages[_winningCardId!]!,
+                              height: 200, // Increase size of the card image
+                              width: 200, // Increase size of the card image
+                            ),
+                            SizedBox(height: 20), // Add spacing between images
+                            // You Won image
+                            Padding(
+                              padding: EdgeInsets.only(left: 20.w),
+                              child: Container(
+                                width: 300.w,
+                                height: 200.h,
+                                decoration: BoxDecoration(
+                                  // color: Colors.white,
+                                  image: DecorationImage(
+                                      image: AssetImage('assets/youwon.png'),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                            ),
+
+                            //You won Money =========================
+
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CustomButtonGame2(
+                                text: "TOTAL WIN - ₹ ${bid.wonAmount} ",
+                                width: 380.w,
+                                height: 60.h,
+                                style: TextStyle(
+                                    fontSize: 28.w,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic),
+                                color: Colors.amber,
+                              ),
+                            ),
+                            CustomSpacers.height14,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    child: CustomButtonGame2(
+                                      text: "EXIT",
+                                      width: 150.w,
+                                      height: 60.h,
+                                      style: TextStyle(
+                                          fontSize: 24.w,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic),
+                                      image: 'assets/cross.png',
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      _resetGame();
+                                    },
+                                    child: CustomShinyButton2(
+                                        text: "PLAY AGAIN",
+                                        width: 220.w,
+                                        height: 60.h,
+                                        style: TextStyle(
+                                            fontSize: 20.w,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic),
+                                        image: 'assets/playagain.png'),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(
+                  width: MediaQuery.of(context).size.width, // Full screen width
+                  height:
+                      MediaQuery.of(context).size.height, // Full screen height
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Centered background GIF
+                      Center(
+                        child: Image.asset(
+                          'assets/loss.gif',
+                          width: MediaQuery.of(context).size.width *
+                              0.9, // Scale to 90% of screen width
+                          height: MediaQuery.of(context).size.height *
+                              0.9, // Scale to 90% of screen height
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      // Positioned content in the center
+                      Positioned.fill(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CustomSpacers.height18,
+
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                                _resetGame();
+                              },
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Image.asset('assets/cross.png'),
+                                  )),
+                            ),
+                            CustomSpacers.height40,
+                            // Card image
+                            Image.asset(
+                              cardImages[_winningCardId!]!,
+                              height: 200, // Increase size of the card image
+                              width: 200, // Increase size of the card image
+                            ),
+                            SizedBox(height: 20), // Add spacing between images
+                            // You Won image
+                            Padding(
+                              padding: EdgeInsets.only(left: 20.w),
+                              child: Container(
+                                width: 300.w,
+                                height: 200.h,
+                                decoration: BoxDecoration(
+                                  // color: Colors.white,
+                                  image: DecorationImage(
+                                      image: AssetImage('assets/youloss.png'),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                            ),
+
+                            //You won Money =========================
+                            CustomSpacers.height38,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                                _resetGame();
+                              },
+                              child: CustomShinyButton2(
+                                  text: "PLAY AGAIN",
+                                  width: 300.w,
+                                  height: 60.h,
+                                  style: TextStyle(
+                                      fontSize: 20.w,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic),
+                                  image: 'assets/playagain.png'),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue, // Text color
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 12), // Button padding
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(10), // Button border radius
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                  Navigator.of(context)
-                      .pop(); // Close the game screen (if needed)
-                  _resetGame();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          ),
         );
       },
     );
@@ -193,7 +350,7 @@ class _Game2ScreenState extends State<Game2Screen> {
     setState(() {
       _remainingTime = 20;
       selectedCardIds.clear();
-      totalBetAmount = 0;
+      totalBetAmount = 10;
       _currentImage = null;
       _isGameInProgress = false;
       _betPlaced = false; // Reset the betPlaced flag
@@ -202,11 +359,12 @@ class _Game2ScreenState extends State<Game2Screen> {
   }
 
   Future<void> placeBet() async {
-        final wallet = Provider.of<WalletProvider>(context, listen: false);
-    if(selectedCardIds.isEmpty){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Select atleast one card to place bet!'),
-      ));
+    final wallet = Provider.of<WalletProvider>(context, listen: false);
+    if (selectedCardIds.isEmpty) {
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text('Select atleast one card to place bet!'),
+      // ));
+      showTopSnackBar(context, 'Select atleast one card to place bet!');
       return;
     }
     if (totalBetAmount > wallet.walletBalance) {
@@ -244,10 +402,43 @@ class _Game2ScreenState extends State<Game2Screen> {
           'Amount deducted - Rs ${totalBetAmount}',
           'placebet-game2');
       // wallet.subWalletAmount(double.parse(totalBetAmount.toString()));
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Bet placed successfully!'),
-      ));
+      showTopSnackBar(context, 'Bet placed successfully!');
     }
+  }
+
+  void showTopSnackBar(BuildContext context, String message) {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: MediaQuery.of(context).padding.top +
+            10, // Adjust the top padding if needed
+        left: 10,
+        right: 10,
+        child: Material(
+          color: Colors.transparent,
+          child: SafeArea(
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue, // SnackBar background color
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                message,
+                style: TextStyle(color: Colors.white), // SnackBar text color
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    overlay?.insert(overlayEntry);
+
+    // Dismiss the snackbar after 3 seconds
+    Future.delayed(Duration(seconds: 3), () {
+      overlayEntry.remove();
+    });
   }
 
   Future<bool> _onWillPop() async {
@@ -315,7 +506,7 @@ class _Game2ScreenState extends State<Game2Screen> {
           ),
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Container(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -327,24 +518,27 @@ class _Game2ScreenState extends State<Game2Screen> {
                     CustomSpacers.height20,
                     CustomSpacers.height20,
                     _buildCardGrid(),
-                    CustomSpacers.height30,
+                    CustomSpacers.height20,
                     !_betPlaced
                         ? _buildBetControls()
                         : _currentImage != null
                             ? Container(
-                              decoration: BoxDecoration(
-                              color: Colors.amber,
-                                borderRadius: BorderRadius.circular(20)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                    width: 100, child: Image.asset(_currentImage!)),
-                              ),
-                            )
+                                width: 100.w,
+                                height: 150.h,
+                                decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                      width: 100,
+                                      child: Image.asset(_currentImage!)),
+                                ),
+                              )
                             : Container(),
                     CustomSpacers.height20,
                     !_betPlaced ? _buildPlaceBetButton() : _buildTimerLogic(),
-                    CustomSpacers.height40,
+                    CustomSpacers.height20,
                   ],
                 ),
               ),
@@ -357,48 +551,61 @@ class _Game2ScreenState extends State<Game2Screen> {
 
   Widget _buildTop() => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                child: Row(
-                  children: [
-                    Icon(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
                       Icons.arrow_back_ios_new,
                       color: Colors.white,
                     ),
-                    CustomSpacers.width12,
-                    Text(
-                      "PATTI KING",
-                      style: TextStyle(
-                          fontSize: 17.h,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    )
-                  ],
+                  ),
+                  CustomSpacers.width12,
+                  Text(
+                    "PATTI KING",
+                    style: TextStyle(
+                        fontSize: 17.h,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  )
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                // _showResultDialog();
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/youtube.png',
+                      height: 50.h,
+                      width: 50.w,
+                      // color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
-              Image.asset(
-                'assets/icons/videotutorial.png',
-                height: 30.h,
-                width: 30.w,
-                color: Colors.yellow,
-              )
-            ],
-          ),
+            )
+          ],
         ),
       );
 
   Widget _buildCardGrid() {
     return Wrap(
-      alignment: WrapAlignment.spaceEvenly,
+      // alignment: WrapAlignment.spaceEvenly,
       children: cardImages.keys.map((cardId) {
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(2.0),
           child: BuildCards(
             images: cardImages[cardId]!,
             onTap: () => onCardTap(cardId),
@@ -492,7 +699,7 @@ class _Game2ScreenState extends State<Game2Screen> {
 
   Widget _buildPlaceBetButton() {
     return GestureDetector(
-      onTap:  placeBet,
+      onTap: placeBet,
       child: Container(
         height: 80.h,
         width: 300.w,
@@ -578,18 +785,27 @@ class BuildCards extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: 140.h,
-        width: 75.w,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? Colors.green : Colors.transparent,
-            width: 6,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7.0),
+        child: Container(
+          // height: 140.h,
+          // width: 75.w,
+          decoration: BoxDecoration(
+            // color: Colors.white,
+            borderRadius: BorderRadius.circular(7),
+            border: Border.all(
+              color: isSelected
+                  ? const Color.fromARGB(255, 108, 255, 34)
+                  : Colors.transparent,
+              width: 5,
+            ),
+          ),
+          child: Image.asset(
+            images,
+            width: 80.w,
+            fit: BoxFit.fitWidth,
           ),
         ),
-        child: Image.asset(images),
       ),
     );
   }

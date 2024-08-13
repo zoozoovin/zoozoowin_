@@ -8,6 +8,7 @@ import 'package:zoozoowin_/core/utils/custom_spacers.dart';
 import 'package:zoozoowin_/core/utils/screen_utils.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:zoozoowin_/features/home/data/result_ticket_provider.dart';
+import 'package:zoozoowin_/ui/atoms/loading_bar.dart';
 import 'package:zoozoowin_/ui/atoms/shine_button.dart';
 import 'package:zoozoowin_/ui/atoms/shine_button1.dart';
 
@@ -288,14 +289,24 @@ class _ResultTicketScreenState extends State<ResultTicketScreen>
                     value.resultHistoryList[11]['wonCard']),
                 CustomSpacers.height26,
               ])
+            // : Padding(
+            //     padding: EdgeInsets.only(top: 300.h),
+            //     child: Container(
+            //         height: 30.h,
+            //         width: 30.w,
+            //         child: CircularProgressIndicator(
+            //           color: Colors.white,
+            //         )),
+            //   ),
+
             : Padding(
                 padding: EdgeInsets.only(top: 300.h),
                 child: Container(
-                    height: 30.h,
-                    width: 30.w,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                    )),
+                    // height: 30.h,
+                    // width: 30.w,
+                    child: LoadingBar(
+                        // color: Colors.white,
+                        )),
               ),
       );
 
