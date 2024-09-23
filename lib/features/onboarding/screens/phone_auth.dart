@@ -32,9 +32,9 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   void initState() {
     super.initState();
     _twilioPhoneVerify = TwilioPhoneVerify(
-      accountSid: 'ACe90aa26dba02e384914e28a8d18125c9',
-      serviceSid: 'VAd5b40f2f78878669faa3d453a2789dd3',
-      authToken: 'f931722f62e7472a050770f2904114a6',
+      accountSid: 'AC793e6541a9f9114557c178bb096fbbf4',
+      serviceSid: 'VAda45fa97cf825ba0a547465b8a5893ff',
+      authToken: 'abc9f7c750419bb7fb0c66aee409a128',
     );
   }
 

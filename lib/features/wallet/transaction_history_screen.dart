@@ -163,7 +163,11 @@ class AllContainer extends StatelessWidget {
                                           width: 35.w,
                                           color: Colors.black,
                                         )
-                                      : null,
+                                      :Image.asset(
+                                      AppImages.game2,
+                                      height: 50.h,
+                                      width: 50.w,
+                                    ) ,
                             ),
                             CustomSpacers.width20,
                             Column(

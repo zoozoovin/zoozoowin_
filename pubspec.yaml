@@ -58,6 +58,8 @@ dependencies:
   badges:
   package_info_plus:
   twilio_phone_verify:
+  youtube_player_flutter: ^9.0.3
+  payu_upi_flutter: ^0.0.2
 
 dev_dependencies:
   flutter_test:

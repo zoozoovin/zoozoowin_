@@ -29,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen>
   late StreamController<String> _countdownController;
   late Stream<String> _countdownStream;
   String countdownText = "";
+  bool showRefreshButton = false;
 
   @override
   void initState() {
@@ -36,6 +37,8 @@ class _HomeScreenState extends State<HomeScreen>
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await Provider.of<HomeProvider>(context, listen: false).fetchData();
+      await Provider.of<HomeProvider>(context, listen: false)
+          .initializeStream();
     });
     _controller = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -56,6 +59,11 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _startCountdown() {
     Timer.periodic(Duration(seconds: 1), (timer) async {
+      if (_countdownController.isClosed) {
+        timer.cancel();
+        return;
+      }
+
       DateTime now = DateTime.now();
       int minute = now.minute;
       if (minute >= 55) {
@@ -64,32 +72,46 @@ class _HomeScreenState extends State<HomeScreen>
         countdownText =
             "${remaining.inMinutes}:${(remaining.inSeconds % 60).toString().padLeft(2, '0')}";
 
-        _countdownController.add(countdownText);
+        if (!_countdownController.isClosed) {
+          _countdownController.add(countdownText);
+        }
 
         if (remaining.inMinutes == 0 && remaining.inSeconds == 0) {
-          print('helo');
-          _updateData();
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => NavBarScreen(
-                        index: 0,
-                      )));
+          print("hello");
+          if (!_countdownController.isClosed) {
+            _countdownController.add('0:00');
+          }
+
+          setState(() {
+            print("set State");
+            showRefreshButton = true; // Show refresh button
+          });
+          timer.cancel(); // Stop the timer
         }
       } else {
         countdownText = "";
-        _countdownController.add(countdownText);
+        if (!_countdownController.isClosed) {
+          _countdownController.add(countdownText);
+        }
       }
     });
   }
 
-  Future<void> _updateData() async {
-    await Provider.of<HomeProvider>(context, listen: false).fetchData();
-    setState(() {});
+  void _refreshPage() {
+    // setState(() {
+    showRefreshButton = false;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await Provider.of<HomeProvider>(context, listen: false).fetchData();
+      await Provider.of<HomeProvider>(context, listen: false)
+          .initializeStream();
+    });
+    //   _startCountdown();
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    print(showRefreshButton);
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
@@ -106,13 +128,22 @@ class _HomeScreenState extends State<HomeScreen>
             CustomSpacers.height24,
             _buildTop(),
             _buildResult(),
-            CustomSpacers.height8,
+            CustomSpacers.height12,
             Divider(thickness: 3),
             _buildCardGames(),
             _buildBoardGames(),
+            // if (showRefreshButton)
+            //   _buildRefreshButton(), // Show the refresh button
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildRefreshButton() {
+    return ElevatedButton(
+      onPressed: _refreshPage,
+      child: Text('Refresh Page'),
     );
   }
 
@@ -169,8 +200,8 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   )
                       .then((v) async {
-                    // await Provider.of<HomeProvider>(context, listen: false)
-                    //     .initializeStream();
+                    await Provider.of<HomeProvider>(context, listen: false)
+                        .initializeStream();
                     await Provider.of<HomeProvider>(context, listen: false)
                         .fetchData();
 
@@ -262,7 +293,10 @@ class _HomeScreenState extends State<HomeScreen>
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                           image: AssetImage(
-                                    AppData.cardImages[value.data!['cardWon']]!,
+                                    value.data!['cardWon'] == null
+                                        ? AppData.cardImages['c1']!
+                                        : AppData.cardImages[
+                                            value.data!['cardWon']]!,
                                   ))),
                                 ),
                               )
@@ -314,40 +348,45 @@ class _HomeScreenState extends State<HomeScreen>
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: AssetImage(
-                              AppData.cardImages[value.data!['cardWon']]!,
+                              value.data!['cardWon'] == null
+                                  ? AppData.cardImages['c1']!
+                                  : AppData.cardImages[value.data!['cardWon']]!,
                             ))),
                           ),
                         )
                       ],
                     ),
-                    StreamBuilder<String>(
-                      stream: _countdownStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Center(
-                            child: Text(
-                              'Result will be declared within ${snapshot.data}',
-                              style: TextStyle(
-                                fontSize: 22.w,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: Text(
-                              'Result will be declared within $countdownText',
-                              style: TextStyle(
-                                fontSize: 22.w,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                    !showRefreshButton
+                        ? StreamBuilder<String>(
+                            stream: _countdownStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                print(snapshot.data);
+                                return Center(
+                                  child: Text(
+                                    'Result will be declared within ${snapshot.data}',
+                                    style: TextStyle(
+                                      fontSize: 22.w,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return Center(
+                                  child: Text(
+                                    'Result will be declared within $countdownText',
+                                    style: TextStyle(
+                                      fontSize: 22.w,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          )
+                        : _buildRefreshButton()
                   ],
                 ),
               );
@@ -379,26 +418,30 @@ class _HomeScreenState extends State<HomeScreen>
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
                                             image: AssetImage(
-                                      AppData
-                                          .cardImages[value.data!['cardWon']]!,
+                                      value.data!['cardWon'] == null
+                                          ? AppData.cardImages['c1']!
+                                          : AppData.cardImages[
+                                              value.data!['cardWon']]!,
                                     ))),
                                   ),
                                 )
                               ],
                             ),
-                            CustomSpacers.height10,
-                            Container(
-                              height: 50.h,
-                              child: Center(
-                                child: Text(
-                                  "PLAY WIN RESULT ${value.tc.toString()} SLOT",
-                                  style: TextStyle(
-                                      fontSize: 24.w,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ),
+                            CustomSpacers.height6,
+                            !showRefreshButton
+                                ? Container(
+                                    height: 50.h,
+                                    child: Center(
+                                      child: Text(
+                                        "PLAY WIN RESULT ${value.tc.toString()} SLOT",
+                                        style: TextStyle(
+                                            fontSize: 24.w,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  )
+                                : _buildRefreshButton(),
                           ],
                         )
                       : Padding(
@@ -519,8 +562,8 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     )
         .then((v) async {
-      // await Provider.of<HomeProvider>(context, listen: false)
-      //     .initializeStream();
+      await Provider.of<HomeProvider>(context, listen: false)
+          .initializeStream();
       await Provider.of<HomeProvider>(context, listen: false).fetchData();
 
       setState(() {});

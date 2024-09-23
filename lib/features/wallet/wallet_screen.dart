@@ -7,6 +7,7 @@ import 'package:zoozoowin_/core/utils/screen_utils.dart';
 import 'package:zoozoowin_/features/wallet/data/wallet_provider.dart';
 import 'package:zoozoowin_/features/wallet/transaction_history_screen.dart';
 import 'package:zoozoowin_/features/wallet/widget/payment_dialog.dart';
+import 'package:zoozoowin_/payment_gateway.dart';
 import 'package:zoozoowin_/ui/atoms/shine_button.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -321,7 +322,7 @@ class _WalletScreenState extends State<WalletScreen> {
       context: context,
       builder: (context) {
         return Consumer<WalletProvider>(
-          builder: (context, value, child) => PaymentDialog(
+          builder: (context, value, child) => MyWidget(
             onAmountEntered: (amount) {
               // _amountInWallet += amount;
               value.addCashWalletAmount(amount);

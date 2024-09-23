@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
-import 'package:zoozoowin_/core/app_imports.dart';
+import 'package:zoozoowin_/core/constants/app_data.dart';
 
 class HomeProvider with ChangeNotifier {
   int _totalCount = 0;
@@ -19,10 +23,34 @@ class HomeProvider with ChangeNotifier {
   Map<String, dynamic>? get data => _data;
 
   HomeProvider() {
+    // initializeStream();
     fetchData();
   }
 
+  List<StreamSubscription<DatabaseEvent>> _subscriptions = [];
+
+  Future<void> initializeStream() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DatabaseReference ref = FirebaseDatabase.instance.ref('Game1');
+    DateTime now = DateTime.now();
+    String formattedDate =
+        '${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}';
+    _totalCount = 0; // Reset the count at the beginning
+
+    for (String slot in AppData.timeSlots) {
+      DatabaseReference slotRef =
+          ref.child('${formattedDate}_$slot/${prefs.getString('phone')}');
+
+      DataSnapshot snapshot = await slotRef.get();
+      if (snapshot.value != null) {
+        _totalCount++;
+      }
+      notifyListeners(); // Notify listeners for each change
+    }
+  }
+
   Future<void> fetchData() async {
+    print('fetchData');
     _isLoading = true;
     notifyListeners();
 
@@ -51,6 +79,7 @@ class HomeProvider with ChangeNotifier {
       } else {
         _data = null;
       }
+      print('doneFetching data');
       _isLoading = false;
       notifyListeners();
     });

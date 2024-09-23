@@ -27,11 +27,39 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
   StreamController<Duration> timerStreamController =
       StreamController<Duration>();
 
+  // late Timer _timer;
+  // int _start = 60;
+  // bool _showRefreshButton = false;
+
   @override
   void initState() {
     super.initState();
     _assignRandomPoints();
     _checkCanSpinToday();
+    // startTimer();
+  }
+
+  // void startTimer() {
+  //   _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+  //     if (_start == 0) {
+  //       setState(() {
+  //         _showRefreshButton = true;
+  //       });
+  //       _timer.cancel();
+  //     } else {
+  //       setState(() {
+  //         _start--;
+  //       });
+  //     }
+  //   });
+  // }
+
+  @override
+  void dispose() {
+    // _timer.cancel();
+    timerStreamController.close();
+    super.dispose();
+    super.dispose();
   }
 
   String _currentDateString() {
@@ -133,11 +161,7 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
     }
   }
 
-  @override
-  void dispose() {
-    timerStreamController.close();
-    super.dispose();
-  }
+ 
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -174,6 +198,23 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
                     children: [
                       CustomSpacers.height40,
                       _buildTop(),
+                      // Center(
+                      //   child: _showRefreshButton
+                      //       ? ElevatedButton(
+                      //           onPressed: () {
+                      //             setState(() {
+                      //               _start = 60;
+                      //               _showRefreshButton = false;
+                      //               startTimer();
+                      //             });
+                      //           },
+                      //           child: Text("Refresh"),
+                      //         )
+                      //       : Text(
+                      //           "Time remaining: $_start seconds",
+                      //           style: TextStyle(fontSize: 24 , color: Colors.white),
+                      //         ),
+                      // ),
                       CustomSpacers.height60,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

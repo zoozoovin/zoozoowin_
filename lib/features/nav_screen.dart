@@ -37,13 +37,13 @@ class _NavBarScreenState extends State<NavBarScreen> {
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const TutorialScreen(),
+    TutorialPage(),
     const ReferEarnScreen(),
     const WalletScreen()
   ];
 
   void _onItemTapped(int index) {
-    if (index == 1 || index == 2) {
+    if ( index == 2) {
       // Show popup instead of navigating
       showDialog(
         context: context,
